@@ -1,4 +1,3 @@
+# Afterhours Backend
 
-# Backend – Afterhours
-
-This folder contains the backend services for the Afterhours platform.
+Web-first backend MVP designed to scale into mobile and AI integrations later.
