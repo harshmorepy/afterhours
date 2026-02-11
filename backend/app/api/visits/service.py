@@ -3,9 +3,15 @@ from typing import Dict
 
 from .schemas import VisitResponse, VisitStatus
 
-# Temporary in-memory store (later → database)
+# ================================
+# In-Memory Store (Temporary DB)
+# ================================
 VISITS: Dict[str, VisitResponse] = {}
 
+
+# ================================
+# CORE VISIT FUNCTIONS
+# ================================
 
 def create_visit(visit: VisitResponse) -> VisitResponse:
     VISITS[visit.visit_id] = visit
@@ -61,3 +67,36 @@ def cancel_visit(visit_id: str) -> VisitResponse:
     visit.status = VisitStatus.CANCELLED
     visit.cancelled_at = datetime.utcnow()
     return visit
+
+
+# ================================
+# VISIT INTELLIGENCE (Analytics)
+# ================================
+
+def get_active_visits():
+    return [
+        visit
+        for visit in VISITS.values()
+        if visit.status in [VisitStatus.CHECKED_IN, VisitStatus.ACTIVE]
+    ]
+
+
+def get_occupancy_count():
+    return len(get_active_visits())
+
+
+def get_visit_summary():
+    summary = {
+        "total_visits": len(VISITS),
+        "active": 0,
+        "checked_out": 0,
+        "cancelled": 0,
+        "pending": 0,
+        "checked_in": 0,
+    }
+
+    for visit in VISITS.values():
+        summary[visit.status.value.lower()] += 1
+
+    return summary
+

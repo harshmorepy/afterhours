@@ -66,6 +66,31 @@ def cancel(visit_id: str):
         raise HTTPException(status_code=400, detail=str(e))
 
 
+@router.get("/active", response_model=list[VisitResponse])
+def active_visits():
+    return service.get_active_visits()
+
+
+@router.get("/occupancy")
+def occupancy():
+    return JSONResponse(
+        content={
+            "current_occupancy": service.get_occupancy_count()
+        },
+        media_type="application/json; charset=utf-8"
+    )
+
+@router.get("/summary")
+def summary():
+    return JSONResponse(
+        content=service.get_visit_summary(),
+        media_type="application/json; charset=utf-8"
+    )
+
+
+
+
+
 # =========================
 # HEALTH / ROOT ENDPOINT
 # =========================
